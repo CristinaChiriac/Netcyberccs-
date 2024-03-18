@@ -1,0 +1,33 @@
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+
+public class SecurityServer {
+    private VPN vpn;
+    private IPControl ipControl;
+    private IPInterrogator ipInterrogator;
+
+    public SecurityServer() {
+        this.vpn = new VPN();
+        this.ipControl = new IPControl();
+        this.ipInterrogator = new IPInterrogator();
+    }
+
+    public void monitorSystem() {
+        // Verifica starea generală a sistemului
+        OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+        double cpuLoad = osBean.getSystemLoadAverage();
+        long freeMemory = Runtime.getRuntime().freeMemory();
+        long totalMemory = Runtime.getRuntime().totalMemory();
+
+        // Exemplu de aplicare a politicii de securitate bazată pe starea sistemului
+        if (cpuLoad > 0.8 || freeMemory < totalMemory * 0.1) {
+            // Condiții de avertizare: încărcarea CPU-ului mare sau memoria liberă scăzută
+            System.out.println("Atenție: Stare critică a sistemului. Aplicând politici de securitate...");
+            
+            // Aplicarea politicii de securitate: de exemplu, blocarea tuturor IP-urilor
+            ipControl.blockAllIPs();
+        } else {
+            System.out.println("Starea sistemului este normală. Nu sunt necesare acțiuni suplimentare.");
+        }
+    }
+}
