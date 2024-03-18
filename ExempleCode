@@ -1,0 +1,41 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class SecurityServer {
+    private static final int PORT = 8888;
+
+    public static void main(String[] args) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("Serverul de securitate este pornit pe portul " + PORT);
+
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Client conectat: " + clientSocket);
+
+                // Crearea fluxurilor de intrare și ieșire pentru comunicare cu clientul
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+
+                // Citirea adresei IP trimise de client
+                String clientIP = in.readLine();
+                System.out.println("Adresa IP a clientului: " + clientIP);
+
+                // Verificarea securității adresei IP
+                boolean isSecure = isIPSecure(clientIP);
+
+                // Trimiterea răspunsului înapoi la client
+                out.println(isSecure ? "Adresa IP este securizată" : "Adresa IP NU este securizată");
+
+                // Închiderea conexiunii cu clientul
+                clientSocket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
