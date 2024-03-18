@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulare Terminal - Verificare IP</title>
+<style>
+    body {
+        font-family: monospace;
+        background-color: #0f0f0f;
+        color: #ffffff;
+        margin: 0;
+        padding: 0;
+    }
+    .terminal {
+        width: 80%;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #1a1a1a;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    .prompt {
+        color: #0ad14b;
+    }
+    .input-line {
+        display: flex;
+    }
+    .input-line input[type="text"] {
+        flex: 1;
+        background-color: transparent;
+        border: none;
+        color: #ffffff;
+        padding: 0;
+        margin: 0;
+        outline: none;
+    }
+    .input-line input[type="submit"] {
+        background-color: #0ad14b;
+        color: #ffffff;
+        border: none;
+        padding: 5px 10px;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+    .response {
+        margin-top: 10px;
+    }
+    .loader {
+        border: 8px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 8px solid #0ad14b;
+        width: 40px;
+        height: 40px;
+        animation: spin 2s linear infinite;
+        margin: 0 auto;
+        display: none;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+
+<div class="terminal">
+    <div class="prompt">$</div>
+    <div class="input-line">
+        <form id="ip-form" onsubmit="return false;">
+            <input type="text" id="ip-input" placeholder="Introduceți IP-ul de verificat...">
+            <input type="submit" value="Verifică IP">
+            <div class="loader" id="loader"></div>
+        </form>
+    </div>
+    <div class="response" id="response"></div>
+</div>
+
+<script>
+function verificaIP() {
+    var ip = document.getElementById("ip-input").value;
+    var responseElement = document.getElementById("response");
+    var loaderElement = document.getElementById("loader");
+
+    // Ascunde mesajele anterioare și afișează loader-ul
+    responseElement.innerHTML = "";
+    loaderElement.style.display = "inline-block";
+
+    // Verifică dacă IP-ul este gol
+    if (ip.trim() === "") {
+        responseElement.innerHTML = "<span style='color: #ff0000;'>Eroare: Introduceți un IP valid!</span>";
+    } else {
+        // Simulăm o întârziere de 2 secunde pentru verificare
+        setTimeout(function() {
+            // Ascunde loader-ul și afișează rezultatul verificării
+            loaderElement.style.display = "none";
+
+            // Aici puteți utiliza un serviciu API pentru a obține informații suplimentare despre adresa IP (țara, ISP etc.)
+            // Pentru acest exemplu, vom afișa doar un mesaj simplu
+            responseElement.innerHTML = "<span style='color: #0ad14b;'>IP-ul " + ip + " NU este vulnerabil!</span>";
+
+            // Exemplu: obținerea informațiilor despre țară și ISP (acesta este doar un exemplu simplificat)
+            // fetch('https://ipapi.co/' + ip + '/json/')
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         responseElement.innerHTML += "<br><strong>Țară:</strong> " + data.country_name;
+            //         responseElement.innerHTML += "<br><strong>ISP:</strong> " + data.org;
+            //     })
+            //     .catch(error => console.error('Eroare la obținerea datelor:', error));
+        }, 2000); // Așteaptă 2 secunde înainte de a afișa rezultatul
+    }
+}
+
+document.getElementById("ip-form").addEventListener("submit", function(event) {
+    verificaIP();
+    event.preventDefault(); // Prevenim trimiterea formularului
+});
+</script>
+
+</body>
+</html>
